@@ -13,7 +13,6 @@ def count_bigger_5(df):
 
 if __name__ == '__main__':
 
-    """
     if not os.path.exists('../Data'):
         os.mkdir('../Data')
 
@@ -39,7 +38,7 @@ if __name__ == '__main__':
         open('../Data/hr_data.xml', 'wb').write(r.content)
         print('Loaded.')
 
-        # All data in now loaded to the Data folder. """
+        # All data in now loaded to the Data folder.
 
     # write your code here
     A_of_dt = pd.read_xml("/Users/aragonerua/PycharmProjects/HR Data Analysis/HR Data Analysis/Data/A_office_data.xml")
@@ -74,11 +73,6 @@ if __name__ == '__main__':
 
     # print(list(merged_all.index), list(merged_all.columns), sep="\n", end="") # The second stage answer
 
-    '''
-    print(merged_all)
-    print(merged_all.columns)
-    '''
-
     sorted_with_average_monthly_hours = merged_all.sort_values("average_monthly_hours", ascending=False)
     top_hours_departments = list()
     for i in range(10):
@@ -92,41 +86,11 @@ if __name__ == '__main__':
     full_list.append(list(merged_all.loc["A3033", "last_evaluation":"satisfaction_level":-1]))
     # print(full_list)  # stage 3/5 answer
 
-    #/--------------------------------------------------------------------------/#
-
-    '''
-    print(merged_all.groupby('left').agg({
-        'number_project':['median', count_bigger_5],
-        'time_spend_company':['mean', 'median'],
-        'Work_accident':'mean',
-        'last_evaluation':['mean', 'std']}).round(2).to_dict())
-    '''
-
     # print(merged_all)
     first_table = merged_all.pivot_table(index="Department", columns=["left", "salary"], values="average_monthly_hours", aggfunc=np.median)
     result_on_first_table = first_table.loc[(first_table[(0, "high")] < first_table[(0, "medium")]) | (first_table[(1, "low")] < first_table[(1, "high")])]
     print(result_on_first_table.to_dict())
-
-    '''
-    all_departments = list(set(merged_all.Department))
-    first_criteria = merged_all.query("left == 1.0").pivot_table(index="Department", columns="salary", values="average_monthly_hours", aggfunc=np.median)
-    # print(first_criteria)
-    departments_first_criteria = list((first_criteria.loc[first_criteria.high < first_criteria.medium]).index)
-    # departments_first_criteria_df = first_criteria.loc[first_criteria.high < first_criteria.medium]
-
-    second_criteria = merged_all.query("left == 0.0").pivot_table(index="Department", columns="salary", values="average_monthly_hours", aggfunc=np.median)
-    # print(second_criteria)
-    departments_second_criteria = list((second_criteria.loc[second_criteria.low < second_criteria.high]).index)
-    # departments_second_criteria_df = second_criteria.loc[second_criteria.low < second_criteria.high]
-
-    all_merged_departments = list(set(departments_second_criteria + departments_first_criteria))
-    # print(all_merged_departments)
-    non_criteria_department = list((Counter(all_departments) - Counter(all_merged_departments)).elements())
-    # need = pd.concat([departments_second_criteria_df, departments_second_criteria_df])
-    # print(need)
-    print(merged_all.pivot_table(index="Department", columns=["left", "salary"], values="average_monthly_hours").drop(labels=non_criteria_department))
-    '''
-
+    
     # print(A_new_indexes, B_new_indexes, hr_data_new_indexes, sep="\n", end="")
 
     second_pivot_with_time_spent = pd.pivot_table(merged_all, index=['time_spend_company'], columns=['promotion_last_5years'],
